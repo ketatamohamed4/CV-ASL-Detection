@@ -2,8 +2,12 @@
 # closing with q. Result: about 30 FPS (the webcam limit).
 import cv2
 import time # we will use it to calculate the fps
+import sys
 
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)   # .videocapture opens the camera, 0 is the default camera, CAP_DSHOW is a flag for Windows to use DirectShow
+# DirectShow on Windows, V4L2 on Linux
+backend = cv2.CAP_DSHOW if sys.platform == "win32" else cv2.CAP_V4L2
+cap = cv2.VideoCapture(0, backend)
+
 
 if not cap.isOpened(): #check if the camera opened successfully
     raise RuntimeError("Could not open webcam")

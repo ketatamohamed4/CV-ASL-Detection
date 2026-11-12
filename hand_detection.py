@@ -1,6 +1,7 @@
 #Goal: draw the 21 hand landmarks on the live video.
 import cv2
 import time
+import sys
 import mediapipe as mp
 
 mp_hands = mp.solutions.hands # Initialize the hand detection model
@@ -13,7 +14,9 @@ hands = mp_hands.Hands(
     min_tracking_confidence=0.5, # how sure MediaPipe must be to say "this is the same hand as before"
 )
 
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+
+backend = cv2.CAP_DSHOW if sys.platform == "win32" else cv2.CAP_V4L2
+cap = cv2.VideoCapture(0, backend)
 
 if not cap.isOpened():
     raise RuntimeError("Could not open webcam")

@@ -5,8 +5,11 @@ import joblib
 import numpy as np
 from collections import deque, Counter
 import mediapipe as mp
+import sys
+from pathlib import Path
 
-model = joblib.load("sign_model.joblib")
+MODEL_PATH = Path(__file__).parent / "sign_model.joblib"
+model = joblib.load(MODEL_PATH)
 
 mp_hands = mp.solutions.hands
 mp_draw = mp.solutions.drawing_utils
@@ -27,7 +30,8 @@ def normalize(landmarks):
     return coords.flatten().reshape(1, -1)
 
 
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+backend = cv2.CAP_DSHOW if sys.platform == "win32" else cv2.CAP_V4L2
+cap = cv2.VideoCapture(0, backend)
 if not cap.isOpened():
     raise RuntimeError("Could not open webcam")
 
